@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-service-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-service
+  template:
+    metadata:
+      labels:
+        app: my-service
+    spec:
+      containers:
+        - name: my-service-container
+          image: your-image:your-tag
+          ports:
+            - containerPort: 8080  # Port on which your service listens
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: my-service  # Points to the labels in your Deployment
+  ports:
+    - protocol: TCP
+      port: 80  # Port through which your service is exposed
+      targetPort: 8080  # Port your application is listening on
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-service-config
+data:
+  # Your configuration data or environment variables here
